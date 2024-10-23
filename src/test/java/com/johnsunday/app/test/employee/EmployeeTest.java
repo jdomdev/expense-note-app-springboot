@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -36,14 +37,17 @@ public class EmployeeTest {
 			+ "1.1 - savedEmployee.isNotNull()\n"
 			+ "1.2 - savedEmployee.getId().isGreaterThan(0)\n")
 	public void testEmployeeSaving() {
-
+		List<Expense> expenses = new ArrayList<>();
+		List<Payroll> payrolls = new ArrayList<>();
+		// 1960-10-30 23:34:42', 25
 		Employee newEmployee = new Employee(
 				"Diego",
 				"Maradona",
-				// 1960-10-30 23:34:42', 25
 				DateUtil.formattingDate(LocalDateTime.of(1960, 10, 30, 23, 34, 42)),
 				positionDao.findByNameIgnoreCase("Project Manager").get(),
-				"diegomaradona@mail.com");
+				"diegomaradona@mail.com",
+				expenses,
+				payrolls);
 		Employee savedEmployee = employeeDao.save(newEmployee);
 
 		assertThat(savedEmployee).isNotNull();

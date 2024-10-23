@@ -59,14 +59,14 @@ public class Employee implements Serializable {
 	// @Temporal(TemporalType.TIMESTAMP)
 	@NonNull
 	private LocalDateTime birthDate;
+	@Column(name = "email", nullable = false, length = 255)
+	@Length(min = 3, max = 255)
+	@NonNull
+	private String email;
 	@OneToOne
 	@JoinColumn(name = "id") // <-position_id(olds employee_type_id/employee_type_id_fk)
 	@NonNull
 	private Position position;
-	@Column(name = "email", nullable = false)
-	@Length(min = 3, max = 50)
-	@NonNull
-	private String email;
 
 	@OneToMany(mappedBy = "employee", targetEntity = Expense.class, cascade = { CascadeType.MERGE, CascadeType.REMOVE,
 			CascadeType.REFRESH, CascadeType.DETACH }, orphanRemoval = false)
@@ -81,9 +81,21 @@ public class Employee implements Serializable {
 	private List<Payroll> payrolls = new ArrayList<>();
 
 	// Constructor without id.
-	public Employee(String name, String surname, LocalDateTime birthDate,
-			Position position, String email,
+	public Employee(String name, String surname, LocalDateTime birthDate, Position position, String email,
 			List<Expense> expenses, List<Payroll> payrolls) {
+		this.name = name;
+		this.surname = surname;
+		this.birthDate = birthDate;
+		this.position = position;
+		this.email = email;
+		this.expenses = expenses;
+		this.payrolls = payrolls;
+	}
+
+	// Constructor with id.
+	public Employee(Long id, String name, String surname, LocalDateTime birthDate, Position position, String email,
+			List<Expense> expenses, List<Payroll> payrolls) {
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.birthDate = birthDate;

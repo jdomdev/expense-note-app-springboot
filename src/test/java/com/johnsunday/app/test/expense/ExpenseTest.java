@@ -32,7 +32,7 @@ public class ExpenseTest {
 	@Autowired
 	IEmployeeDao employeeDao;
 	@Autowired
-	IPositionDao employeeTypeDao;
+	IPositionDao positionDao;
 
 	@Test
 	@DisplayName(value = "Test 1 -> test expense saving\n"
@@ -64,6 +64,12 @@ public class ExpenseTest {
 		if (optOldExpense != null) {
 			// Expense expense = new
 			// Integer id,String concept,LocalDateTime date,Double amount,Employee employee
+
+			/*
+			 * public Employee(String name, String surname, LocalDateTime birthDate,
+			 * Position position, String email,
+			 * List<Expense> expenses, List<Payroll> payrolls)
+			 */
 			Expense expenseToUp = new Expense(
 					13L,
 					"Taxiiiiiiiii",
@@ -74,7 +80,7 @@ public class ExpenseTest {
 							"Sylvester",
 							"Stewart",
 							DateUtil.formattingDate(LocalDateTime.of(1984, 06, 15, 11, 24, 00)),
-							employeeTypeDao.findByNameIgnoreCase("scrum master").get(),
+							positionDao.findByNameIgnoreCase("scrum master").get(),
 							"slystone@gmail.com",
 							new ArrayList<Expense>(),
 							new ArrayList<Payroll>()));

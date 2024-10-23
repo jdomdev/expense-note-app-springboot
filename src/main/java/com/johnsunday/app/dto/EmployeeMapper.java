@@ -23,8 +23,8 @@ public class EmployeeMapper {
 				employeeDto.getName(),
 				employeeDto.getSurname(),
 				employeeDto.getBirthDate(),
-				PositionMapper.dtoToPosition(employeeDto.getPositionDto()),
 				employeeDto.getEmail(),
+				PositionMapper.dtoToPosition(employeeDto.getPositionDto()),
 				dtosToExpenses(employeeDto.getExpenseDtos()),
 				dtosToPayrolls(employeeDto.getPayrollDtos()));
 	}

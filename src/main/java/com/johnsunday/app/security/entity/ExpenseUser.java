@@ -2,8 +2,6 @@ package com.johnsunday.app.security.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +25,6 @@ import com.johnsunday.app.entity.Employee;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -41,6 +38,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
+// @Builder
 
 public class ExpenseUser implements UserDetails {
 
@@ -66,36 +64,36 @@ public class ExpenseUser implements UserDetails {
 	@NonNull
 	private String password;
 	@OneToOne
-	@JoinColumn(name = "id", nullable = true) // <-employee_id
+	@JoinColumn(name = "id", nullable = false) // <-employee_id
 	private Employee employee;
 
 	// Constructor without ID.
 	public ExpenseUser(
-			String email,
-			String name,
-			String password,
+			String name,			
 			String surname,
-			Collection<Role> roles) {
-		this.email = email;
+			String email,
+			String password,
+			Collection<Role> roles) {		
 		this.name = name;
-		this.password = password;
 		this.surname = surname;
+		this.email = email;
+		this.password = password;
 		this.roles = roles;
 	}
 
 	// Constructor with ID.
 	public ExpenseUser(
 			Long id,
-			String email,
-			String name,
-			String password,
+			String name,			
 			String surname,
+			String email,
+			String password,
 			Collection<Role> roles) {
 		this.id = id;
-		this.email = email;
 		this.name = name;
-		this.password = password;
 		this.surname = surname;
+		this.email = email;
+		this.password = password;
 		this.roles = roles;
 	}
 

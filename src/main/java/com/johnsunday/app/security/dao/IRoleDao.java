@@ -11,4 +11,6 @@ import com.johnsunday.app.security.entity.Role;
 public interface IRoleDao extends JpaRepository<Role, Long> {
 
 	public Optional<Role> findByName(String roleName);
+
+	public boolean existsByName(String string);
 }

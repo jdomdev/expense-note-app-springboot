@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
+//import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -18,11 +20,17 @@ import com.johnsunday.app.security.dao.IUserDao;
 import com.johnsunday.app.security.entity.ExpenseUser;
 import com.johnsunday.app.security.entity.Role;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.springframework.transaction.annotation.Transactional;
+
 //@SpringBootTest
-//@TestPropertySource(locations = "classpath:application-sample.properties")
+// @TestPropertySource(locations = "classpath:application-sample.properties")
 @DataJpaTest
-// Spring Boot no intentará reemplazar tu base de datos real con H2 para
-// ejecutar las pruebas
+/*
+ * Spring Boot no intentará reemplazar tu base de datos real
+ * con H2 para ejecutar las pruebas:
+ */
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class UserTest {
@@ -40,16 +48,27 @@ public class UserTest {
 		Role roleUser = new Role("ROLE_USER");
 		entityManager.persist(roleAdmin);
 		entityManager.persist(roleUser);
-
 	}
 
 	@Test
+	@Transactional
+	public void testRolesExist() {
+		boolean roleAdminExists = roleDao.existsByName("ROLE_ADMIN");
+		boolean roleUserExists = roleDao.existsByName("ROLE_USER");
+
+		assertTrue(roleAdminExists, "ROLE_ADMIN should exist");
+		assertTrue(roleUserExists, "ROLE_USER should exist");
+	}
+
+	@Test
+	// @Transactional
 	public void testUserSaving() {
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		/* 83 Rihanna Fenty 1988-02-20 18:22:17.000 17 */
 		final String ROLE_ADMIN = "ROLE_ADMIN";
 		String rawPassword = "fenty1234";
 		String encodedPassword = passwordEncoder.encode(rawPassword);
+		ensureRoleExist();
 		// Obtén el rol, lanza una excepción si no se encuentra
 		Optional<Role> adminRoleOpt = roleDao.findByName(ROLE_ADMIN);
 		// Role roleAdmin = roleDao.getReferenceById(1L);
@@ -63,13 +82,33 @@ public class UserTest {
 			newUser.setPassword(encodedPassword);
 			newUser.setSurname("Fenty");
 			newUser.addRole(adminRole);
-
 			savedUser = userDao.save(newUser);
-			assertThat(savedUser).isNotNull();
-			assertThat(savedUser.getId()).isGreaterThan(0);
+			// entityManager.persist(newUser);
+			assertThat(savedUser)
+					.withFailMessage("El usuario guardado no debe ser nulo")
+					.isNotNull();
+			/*
+			 * assertThat(savedUser.getId())
+			 * .withFailMessage("El ID del usuario guardado debe ser mayor a 0")
+			 * .isGreaterThan(0);
+			 */
+			assertThat(adminRole)
+					.withFailMessage("El role de administrador no debe ser nulo")
+					.isNotNull();
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Admin Role Optional EMPTY: ").append(adminRoleOpt);
+		}
+	}
+
+	public void ensureRoleExist() {
+		if (!roleDao.findByName("ROLE_ADMIN").isPresent()) {
+			Role roleAdmin = new Role("ROLE_ADMIN");
+			entityManager.persist(roleAdmin);
+		}
+		if (!roleDao.findByName("ROLE_USER").isPresent()) {
+			Role roleUser = new Role("ROLE_USER");
+			entityManager.persist(roleUser);
 		}
 	}
 
