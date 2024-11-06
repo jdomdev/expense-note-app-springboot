@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.johnsunday</groupId>
-	<artifactId>Expense_Note_App</artifactId>
+	<artifactId>expensenoteapp</artifactId>
 	<version>v1.0.0</version>
-	<name>Expense_Note_App</name>
+	<name>ExpenseNoteApp</name>
 	<description>Spring Boot project for company expense note of employees</description>
 	<properties>
 <!--   	<springframework-version>6.0.12</springframework-version>  --><!-- Última versión estable -->
