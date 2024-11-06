@@ -1,0 +1,3 @@
+[submodule "back"]
+	path = back
+	url = https://github.com/jdomdev/expense-note-app-springboot.git
